@@ -12,7 +12,7 @@ public:
     ~Graph();
     void insert(int x, int y);
     void display();
-    void topologicalsort();
+    void topologicalsort(); //remove this for undirected graph
 };
 
 Graph::Graph(int a,int b){
@@ -50,7 +50,7 @@ void Graph::display(){
     }
 }
 
-void Graph::topologicalsort() {
+void Graph::topologicalsort() { //remove this full function for undirected graph
     int* in_degree = new int[n + 1]();
     int* order = new int[n + 1];
     int index = 0;
