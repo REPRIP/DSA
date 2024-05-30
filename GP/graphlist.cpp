@@ -1,4 +1,4 @@
-//@Author: Vivesh G
+//@Author: 
 #include<iostream>
 #include "LinkedList_Implementation.cpp"
 using namespace std;
