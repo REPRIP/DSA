@@ -74,10 +74,38 @@ void BST::insert(int item){
 }
 
 void BST::del(int item){
-    
+    delHelper(root, item);
 }
-void BST::del(BNode *node){
 
+BNode* BST::delHelper(BNode* node, int item){
+    if(node == NULL)
+        return node;
+
+    if(item < node->ele)
+        node->Lchild = delHelper(node->Lchild, item);
+    else if(item > node->ele)
+        node->Rchild = delHelper(node->Rchild, item);
+    else {
+        if(node->Lchild == NULL) {
+            BNode* temp = node->Rchild;
+            delete node;
+            return temp;
+        }
+        else if(node->Rchild == NULL) {
+            BNode* temp = node->Lchild;
+            delete node;
+            return temp;
+        }
+
+        BNode* temp = findmin(node->Rchild);
+        node->ele = temp->ele;
+        node->Rchild = delHelper(node->Rchild, temp->ele);
+    }
+    return node;
+}
+
+void BST::del(BNode *node){
+    delHelper(root, node->ele);
 }
 void BST::preorder(){
     if (isEmpty()){

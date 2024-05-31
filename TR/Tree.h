@@ -35,5 +35,5 @@ public:
     bool isEmpty();
     BNode* find_pos();
     bool isLeaf();
-    
+    BNode* delHelper(BNode* node,int item);
 };
