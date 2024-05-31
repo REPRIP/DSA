@@ -26,6 +26,9 @@ public:
     void deleteTree(Node* node);
     void insert(int elem) { root = insert(elem, root); }
     void preorder() { preorder(root); }
+    Node* deleteNode(int elem, Node* node);
+    void deleteNode(int elem);
+    Node* minValueNode(Node* node);
 };
 
 int AVL::max(int a, int b) {
@@ -119,6 +122,63 @@ void AVL::deleteTree(Node* node) {
         delete node;
     }
 }
+
+Node* AVL::minValueNode(Node* node) {
+    Node* current = node;
+    while (current->Lchild != nullptr)
+        current = current->Lchild;
+    return current;
+}
+
+void AVL::deleteNode(int elem) { root = deleteNode(elem, root); }
+
+Node* AVL::deleteNode(int elem, Node* root) {
+    if (root == nullptr)
+        return root;
+
+    if (elem < root->data)
+        root->Lchild = deleteNode(elem, root->Lchild);
+    else if (elem > root->data)
+        root->Rchild = deleteNode(elem, root->Rchild);
+    else {
+        if ((root->Lchild == nullptr) || (root->Rchild == nullptr)) {
+            Node* temp = root->Lchild ? root->Lchild : root->Rchild;
+            if (temp == nullptr) {
+                temp = root;
+                root = nullptr;
+            } else
+                *root = *temp;
+            delete temp;
+        } else {
+            Node* temp = minValueNode(root->Rchild);
+            root->data = temp->data;
+            root->Rchild = deleteNode(temp->data, root->Rchild);
+        }
+    }
+
+    if (root == nullptr)
+        return root;
+
+    root->height = 1 + max(height(root->Lchild), height(root->Rchild));
+
+    int Balance = balance(root);
+
+    if (Balance > 1 && balance(root->Lchild) >= 0)
+        return rightrotate(root);
+    if (Balance > 1 && balance(root->Lchild) < 0) {
+        root->Lchild = leftrotate(root->Lchild);
+        return rightrotate(root);
+    }
+    if (Balance < -1 && balance(root->Rchild) <= 0)
+        return leftrotate(root);
+    if (Balance < -1 && balance(root->Rchild) > 0) {
+        root->Rchild = rightrotate(root->Rchild);
+        return leftrotate(root);
+    }
+
+    return root;
+}
+
 
 int main() {
     AVL avltree;
