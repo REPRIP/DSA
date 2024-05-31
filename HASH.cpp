@@ -7,6 +7,8 @@ public:
     int* table;
     int size = 19;
     int occupied;
+    float LF;
+
     int hashfunc(int key){
         if (key < 0){
             return (-key) % size;
@@ -15,8 +17,18 @@ public:
     }
 
     int rehash(int index){
-        return (index + 1) % size;
+        return (index + 1) % size; //Linear
     }
+
+    /*
+    int rehash(int index, int i){
+    return (index + i*i) % size; //Quadratic
+    }
+
+    int rehash(int index, int i){
+    return (index + i * (7 - (index % 7))) % size; //Double hashing
+    }
+    */
 
     int strhash(string str){
         int n = str.length();
@@ -28,6 +40,7 @@ public:
     }
 
     HashTable(){
+        occupied = 0;
         table = new int[size];
         for(int i = 0; i < size; i++){
             table[i] = 0;
@@ -41,6 +54,14 @@ public:
         }
         table[index] = key;
         occupied++;
+        calc_load_factor();
+        if (LF > 0.5){
+            rehash_table();
+        }
+    }
+
+    void rehash_table(){
+        //Code to increase size of table and rehash all elements
     }
 
     int search(int key){
@@ -58,6 +79,14 @@ public:
             cout << endl;
         }
     }
+
+    float load_factor(){
+        return LF;
+    }
+
+    void calc_load_factor(){
+        LF = float(occupied) / size;
+    }
     
 };
 
@@ -68,6 +97,7 @@ int main(){
     hash.insert(20);
     hash.insert(-40);
     hash.display();
-    cout << hash.search(10);
+    //cout << hash.search(10) << endl;
+    cout << hash.load_factor();
 }
 
